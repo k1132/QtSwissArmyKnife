@@ -43,12 +43,8 @@ jobs:
       matrix:
         qt_ver: [5.15.2]
         qt_target: [desktop]
-        qt_arch: [win32_msvc2019, win64_msvc2019_64]
+        qt_arch: [win64_msvc2019_64]
         include:
-          - qt_arch: win32_msvc2019
-            msvc_arch: x86
-            qt_arch_install: msvc2019
-            target_arch: x86
           - qt_arch: win64_msvc2019_64
             msvc_arch: x64
             qt_arch_install: msvc2019_64
@@ -114,58 +110,6 @@ jobs:
           upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
           asset_path: ${{ env.zip_derectory }}.zip
           asset_name: ${{ env.zip_derectory }}.zip
-          asset_content_type: application/zip
-
-
-  build-for-android:
-    needs: [create-release]
-    name: Build for Android
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        qt_arch: [android_x86, android_armv7, android_arm64_v8a]
-        qt_ver: [5.12.10]
-        qt_target: [android]
-    steps:
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          # Version of Qt to install
-          version: ${{ matrix.qt_ver }}
-          # Target platform for build
-          target: ${{ matrix.qt_target }}
-          # Architecture for Windows/Android
-          arch: ${{ matrix.qt_arch }}
-          modules: qtcharts
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: build android
-        # https://doc.qt.io/qt-5/deployment-android.html
-        #  deploy command line: androiddeployqt --verbose --output release/ --input $(ls *.json) --android-platform android-29 --jdk $JAVA_HOME --gradle
-        run: |
-          export JAVA_HOME=$JAVA_HOME_8_X64
-          export ANDROID_SDK_ROOT=$ANDROID_HOME
-          export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
-          echo $ANDROID_HOME $ANDROID_HOME
-          qmake
-          make install INSTALL_ROOT="./release"
-          echo $JAVA_HOME_8_X64
-          echo $JAVA_HOME_11_X64
-          echo $PATH
-          androiddeployqt --verbose --output release/ --input $(ls *.json) --android-platform android-29 --jdk $JAVA_HOME --gradle
-      
-      - name: Gets latest created release info
-        id: latest_release_info
-        uses: jossef/action-latest-release-info@v1.1.0
-      
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
-          asset_path: release/build/outputs/apk/debug/release-debug.apk
-          asset_name: ${{ env.RELEASE_NAME }}-${{ steps.latest_release_info.outputs.tag_name }}-for-${{ matrix.qt_arch }}.apk
           asset_content_type: application/zip
 
 
