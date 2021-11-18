@@ -28,8 +28,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}-${{ env.NOW }}
+          tag_name: Tag-${{ github.ref }}-${{ env.NOW }}
+          release_name: Release-${{ github.ref }}-${{ env.NOW }}
           body: 'The version is ready. You can see the changed log: https://github.com/qsaker/QtSwissArmyKnife/blob/master/resources/files/History.txt'
           draft: false
           prerelease: false
