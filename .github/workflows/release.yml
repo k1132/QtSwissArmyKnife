@@ -18,7 +18,7 @@ jobs:
     steps:
       # Pull code
       - name: Set current date as env variable
-        run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Pull code
         uses: actions/checkout@v1
         with:
