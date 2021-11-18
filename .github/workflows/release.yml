@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       # Pull code
+      - name: Set current date as env variable
+        run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Pull code
         uses: actions/checkout@v1
         with:
@@ -27,7 +29,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release ${{ github.ref }}-${{ env.NOW }}
           body: 'The version is ready. You can see the changed log: https://github.com/qsaker/QtSwissArmyKnife/blob/master/resources/files/History.txt'
           draft: false
           prerelease: false
